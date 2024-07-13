@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+### Invalidating the cache locally
+We normally rely on a webhook from Strapi to invalidate our cache. This CURL command will invalidate your cache locally and test the webhook setup.
+```
+curl -X POST http://localhost:3000/api/strapi-revalidate \
+-H "Content-Type: application/json" \
+-d '{
+  "event": "entry.create",
+  "model": "blog-reganshaner-com-post",
+  "entry": {},
+  "created_at": "2024-06-25T12:34:56Z",
+  "updated_at": "2024-06-25T12:34:56Z"
+}'
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
