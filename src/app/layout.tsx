@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import localFont from 'next/font/local';
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 import "./globals.css";
 
@@ -28,7 +27,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <SpeedInsights/>
       <body className={`${GeistMono.variable} ${inter.variable} ${migha.variable}`}>{children}</body>
     </html>
   );
