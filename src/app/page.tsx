@@ -42,7 +42,7 @@ export default async function Home() {
     <div className={styles.blog}>
       <main className={styles.main}>
         <header className={styles.header}>
-          <h1><span>NEO</span><span>STALGIA</span></h1>
+          <h1><span>NEO</span><span>STALGIC</span></h1>
         </header>
         {posts}
       </main>
