@@ -1,27 +1,33 @@
 import styles from "./page.module.css";
 import { fetchCollection } from "@/utils/cms-utils";
-import Markdown from "react-markdown";
 import React from "react";
 import RehypeVideo from '@/lib/RehypeVideo/RehypeVideo';
+import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
 
 
+async function getData() {
+  const res = await fetchCollection('blog-reganshaner-com-post')
+  const data = res.json();
+  return data;
+}
 
 export default async function Home() {
-  const fetchCollection = async (resource: string, init?: RequestInit | undefined) => {
-    const pluralResource = resource + 's';
-    const apiUrl = `${process.env.STRAPI_HOST}/api/${pluralResource}`;
+  const {data} = await getData();
 
-    const defaultInit = {next: { tags: [resource]}, headers: {"Authorization": `Bearer ${process.env.STRAPI_API_TOKEN}`}};
-    const mergedInit = {...defaultInit, init}
-
-    return fetch(apiUrl, mergedInit);
-  }
-
-  const res = await fetchCollection('blog-reganshaner-com-post')
-  const posts: any[] = (await res.json()).data;
-
-  const renderedPosts = posts?.map((post: any) => {
+  const renderedPosts = data?.map((post: any) => {
     const attributes = post.attributes
+
+    const markdown = attributes.Body;
+
+
+    const mdxRemoteProps: MDXRemoteProps = {
+      source: markdown,
+      options: {
+        mdxOptions: {
+          rehypePlugins: [RehypeVideo],
+        }
+      }
+    }
 
     return (
       <div key={post.id} className={styles.post}>
@@ -32,9 +38,7 @@ export default async function Home() {
           </div>
         </header>
         <div className={styles.postBody}>
-          <Markdown rehypePlugins={[[RehypeVideo]]}>
-            {attributes.Body}
-          </Markdown>
+          <MDXRemote {...mdxRemoteProps} />
         </div>
         <footer>
           <span>...</span>
