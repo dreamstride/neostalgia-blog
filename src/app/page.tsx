@@ -5,17 +5,22 @@ import React from "react";
 import RehypeVideo from '@/lib/RehypeVideo/RehypeVideo';
 
 
-async function getData() {
-  const res = await fetchCollection('blog-reganshaner-com-post')
-  const data = res.json();
-  return data;
-}
 
 export default async function Home() {
-  const {data} = await getData();
+  const fetchCollection = async (resource: string, init?: RequestInit | undefined) => {
+    const pluralResource = resource + 's';
+    const apiUrl = `${process.env.STRAPI_HOST}/api/${pluralResource}`;
 
+    const defaultInit = {next: { tags: [resource]}, headers: {"Authorization": `Bearer ${process.env.STRAPI_API_TOKEN}`}};
+    const mergedInit = {...defaultInit, init}
 
-  const posts: React.ReactNode[] = data?.map((post: any) => {
+    return fetch(apiUrl, mergedInit);
+  }
+
+  const res = await fetchCollection('blog-reganshaner-com-post')
+  const posts: any[] = (await res.json()).data;
+
+  const renderedPosts = posts?.map((post: any) => {
     const attributes = post.attributes
 
     return (
@@ -44,7 +49,7 @@ export default async function Home() {
         <header className={styles.header}>
           <h1><span>NEO</span><span>STALGIC</span></h1>
         </header>
-        {posts}
+        {renderedPosts}
       </main>
     </div>
   );
